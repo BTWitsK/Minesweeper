@@ -5,6 +5,7 @@ public class Cell {
     private boolean isMine;
     private final boolean isCorner;
     private final boolean isEdge;
+    private final boolean isGuessed;
     final int xAxis;
     final int yAxis;
     private int minesAround = 0;
@@ -18,6 +19,7 @@ public class Cell {
         display = ".";
         isCorner = (x == 0 || x == boardSize) && (y == 0 || y == boardSize);
         isEdge = (x == 0 || x == boardSize || y == 0 || y == boardSize) && !isCorner;
+        isGuessed = false;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class Cell {
 
     public void makeMine() {
         isMine = true;
-        display = "X";
+        display = isGuessed ? "*":".";
     }
 
     public void setMinesAround() {

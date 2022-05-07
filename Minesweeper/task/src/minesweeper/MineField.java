@@ -33,11 +33,16 @@ class MineField {
     }
 
     public void printField() {
+        int rowNumber = 1;
+        System.out.println(" |123456789|");
+        System.out.println("_|_________|");
         for (Cell[] row : field) {
+            System.out.printf("%d|", rowNumber++);
             for (Cell cell : row) {
                 System.out.print(cell);
             }
-            System.out.println();
+            System.out.println("|");
         }
+        System.out.println("_|_________|");
     }
 }
