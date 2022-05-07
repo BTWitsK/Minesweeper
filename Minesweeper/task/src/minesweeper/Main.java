@@ -5,8 +5,12 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("How many mines do you want on the field?");
+        System.out.print("How many mines do you want on the field?");
         MineField field = new MineField(scanner.nextInt());
-        field.printField();
+        while (field.isWon()) {
+            field.printField();
+            System.out.print("Set/delete mines marks (x and y coordinates):");
+            field.guessMine(scanner.nextInt(), scanner.nextInt());
+        }
     }
 }

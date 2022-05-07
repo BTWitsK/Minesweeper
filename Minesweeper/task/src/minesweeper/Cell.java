@@ -5,7 +5,7 @@ public class Cell {
     private boolean isMine;
     private final boolean isCorner;
     private final boolean isEdge;
-    private final boolean isGuessed;
+    private boolean isGuessed;
     final int xAxis;
     final int yAxis;
     private int minesAround = 0;
@@ -33,7 +33,16 @@ public class Cell {
 
     public void makeMine() {
         isMine = true;
+    }
+
+    public boolean isGuessed() {
+        isGuessed = !isGuessed;
         display = isGuessed ? "*":".";
+        return isGuessed;
+    }
+
+    public int getMinesAround() {
+        return minesAround;
     }
 
     public void setMinesAround() {
