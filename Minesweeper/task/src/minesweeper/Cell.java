@@ -6,6 +6,7 @@ public class Cell {
     private final boolean isCorner;
     private final boolean isEdge;
     private boolean isGuessed;
+    private boolean isFree;
     final int xAxis;
     final int yAxis;
     private int minesAround = 0;
@@ -14,17 +15,30 @@ public class Cell {
 
     public Cell(int x, int y, int boardSize) {
         isMine = false;
+        isGuessed = false;
+        isFree = true;
         xAxis = x;
         yAxis = y;
         display = ".";
         isCorner = (x == 0 || x == boardSize) && (y == 0 || y == boardSize);
         isEdge = (x == 0 || x == boardSize || y == 0 || y == boardSize) && !isCorner;
-        isGuessed = false;
     }
 
     @Override
     public String toString() {
-        return minesAround == 0 || isMine ? display : String.valueOf(minesAround);
+        return display;
+    }
+
+    public int exploreCell() {
+        if (isMine) {
+            return -1;
+        }
+        if (isFree && minesAround != 0) {
+            display = String.valueOf(minesAround);
+        } else {
+            display = "/";
+        }
+        return 1;
     }
 
     public int isMine() {
@@ -33,6 +47,7 @@ public class Cell {
 
     public void makeMine() {
         isMine = true;
+        isFree = false;
     }
 
     public boolean isGuessed() {

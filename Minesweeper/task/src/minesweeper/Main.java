@@ -7,10 +7,15 @@ public class Main {
 
         System.out.print("How many mines do you want on the field?");
         MineField field = new MineField(scanner.nextInt());
-        while (field.isWon()) {
+        while (field.notOver()) {
             field.printField();
-            System.out.print("Set/delete mines marks (x and y coordinates):");
-            field.guessMine(scanner.nextInt(), scanner.nextInt());
+            System.out.print("Set/unset mines marks or claim a cell as free:");
+            String[] userGuess = scanner.nextLine().split(" ");
+            if (userGuess[2].equals("free")) {
+                field.guessFree(Integer.parseInt(userGuess[1]), Integer.parseInt(userGuess[0]));
+            } else {
+                field.markMine(Integer.parseInt(userGuess[1]), Integer.parseInt(userGuess[0]));
+            }
         }
     }
 }
