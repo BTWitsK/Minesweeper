@@ -6,11 +6,9 @@ class MineField {
     Cell[][] field = new Cell[9][9];
     int boardSize = field.length - 1;
     int currentMines = 0;
-    private int safeCells = field.length * field.length;
+    private int safeCells = field.length * field[0].length;
     private boolean isWon = false;
     private boolean failed = false;
-
-
 
     public MineField(int mines) {
         field = Cell.loadField(boardSize);
@@ -29,37 +27,54 @@ class MineField {
 
     public void markMine(int x, int y) {
         Cell currentCell = field[x - 1][y - 1];
-        //if (currentCell.toString().matches("\\d")) {
-        //    System.out.println("\nThere is a number here!");
-        //} else {
-            if (currentCell.isGuessed()) {
-                if (currentCell.isMine() > 0) {
-                    currentMines--;
-                }
-            } else {
-                if (currentCell.isMine() > 0) {
-                    currentMines++;
-                }
+        if (currentCell.isGuessed()) {
+            if (currentCell.isMine() > 0) {
+                currentMines--;
             }
-        //}
+        } else {
+            if (currentCell.isMine() > 0) {
+                currentMines++;
+            }
+        }
     }
+
     public void exploreCell(int x, int y) {
         Cell currentCell = field[x - 1][y - 1];
 
         if (currentCell.exploreCell() == -1) {
             failed = true;
+        } else {
+            freeCells(currentCell);
         }
+    }
+    //floodfill algorithm
+    public void freeCells(Cell currentCell) {
+        if (currentCell.isVisited()) {
+            return;
+        }
+        if (currentCell.isMine() > 0) {
+            return;
+        }
+        currentCell.markVisited();
+        if (currentCell.getMinesAround() > 0) {
+            return;
+        }
+        currentCell.getNeighbors().forEach(this::freeCells);
+        safeCells--;
     }
 
     public boolean notOver() {
-        isWon = currentMines > 0;
-        if (!isWon) {
+        isWon = currentMines < 1 || safeCells < 1;
+        if (isWon) {
             System.out.println("Congratulations! You found all the mines!");
+            printField();
         }
-        if (!failed) {
+        if (failed) {
             System.out.println("You stepped on a mine and failed!");
+            printField();
+            isWon = true;
         }
-        return isWon;
+        return !isWon;
     }
 
     public void checkMines() {

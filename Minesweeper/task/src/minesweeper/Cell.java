@@ -7,15 +7,18 @@ public class Cell {
     private final boolean isEdge;
     private boolean isGuessed;
     private boolean isFree;
+    private boolean isVisited;
     final int xAxis;
     final int yAxis;
     private int minesAround = 0;
     private String display;
     private final ArrayList<Cell> neighbors = new ArrayList<>();
+    private final ArrayList<Cell> mines = new ArrayList<>();
 
     public Cell(int x, int y, int boardSize) {
         isMine = false;
         isGuessed = false;
+        isVisited = false;
         isFree = true;
         xAxis = x;
         yAxis = y;
@@ -31,11 +34,12 @@ public class Cell {
 
     public int exploreCell() {
         if (isMine) {
+            mines.forEach(cell -> cell.display = "X");
             return -1;
         }
         if (isFree && minesAround != 0) {
             display = String.valueOf(minesAround);
-        } else {
+        } else if (isFree) {
             display = "/";
         }
         return 1;
@@ -45,9 +49,8 @@ public class Cell {
         return isMine ? 1 : 0;
     }
 
-    public void makeMine() {
-        isMine = true;
-        isFree = false;
+    public int getMinesAround() {
+        return minesAround;
     }
 
     public boolean isGuessed() {
@@ -56,8 +59,19 @@ public class Cell {
         return isGuessed;
     }
 
-    public int getMinesAround() {
-        return minesAround;
+    public boolean isVisited() {
+        return isVisited;
+    }
+
+    public void markVisited() {
+        isVisited = true;
+        display = minesAround > 0 ? String.valueOf(minesAround) : "/";
+    }
+
+    public void makeMine() {
+        isMine = true;
+        isFree = false;
+        mines.add(this);
     }
 
     public void setMinesAround() {
@@ -135,6 +149,10 @@ public class Cell {
                 neighbors.add(field[xAxis + i][yAxis + j]);
             }
         }
+    }
+
+    public ArrayList<Cell> getNeighbors() {
+        return neighbors;
     }
 
     public static Cell[][] loadField(int boardSize) {
